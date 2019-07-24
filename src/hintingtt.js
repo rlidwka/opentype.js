@@ -2323,6 +2323,30 @@ function S45ROUND(state) {
     else state.srThreshold = (n / 8 - 0.5) * period;
 }
 
+// JROT[] Jump Relative On True
+// 0x78
+function JROT(state) {
+    const e = state.stack.pop();
+    const o = state.stack.pop();
+
+    if (exports.DEBUG) console.log(state.step, 'JROT[]', e, o);
+
+    // A jump by 1 would do nothing.
+    state.ip += e ? o - 1 : 0;
+}
+
+// JROF[] Jump Relative On False
+// 0x79
+function JROF(state) {
+    const e = state.stack.pop();
+    const o = state.stack.pop();
+
+    if (exports.DEBUG) console.log(state.step, 'JROF[]', e, o);
+
+    // A jump by 1 would do nothing.
+    state.ip += e ? 0 : o - 1;
+}
+
 // ROFF[] Round Off
 // 0x7A
 function ROFF(state) {
@@ -2688,8 +2712,8 @@ instructionTable = [
     /* 0x75 */ DELTAC123.bind(undefined, 3),
     /* 0x76 */ SROUND,
     /* 0x77 */ S45ROUND,
-    /* 0x78 */ undefined,   // TODO JROT[]
-    /* 0x79 */ undefined,   // TODO JROF[]
+    /* 0x78 */ JROT,
+    /* 0x79 */ JROF,
     /* 0x7A */ ROFF,
     /* 0x7B */ undefined,
     /* 0x7C */ RUTG,
